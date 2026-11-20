@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>베베 동화 영상 모음 🐨📚</title>
+  <title>베베 동화 리스트 🐨📚</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts & Font Awesome Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <script>
@@ -19,21 +19,6 @@
           fontFamily: {
             sans: ['"Noto Sans KR"', 'sans-serif'],
             gowun: ['"Gowun Dodum"', 'sans-serif'],
-          },
-          colors: {
-            cream: {
-              50: '#FAF8F5',
-              100: '#F5F0EB',
-              200: '#E8DFD5',
-            },
-            pastel: {
-              yellow: '#FFF3C4',
-              pink: '#FFE3E3',
-              blue: '#D0EBFF',
-              green: '#D3F9D8',
-              purple: '#EEBFA8',
-              orange: '#FFE8CC',
-            }
           }
         }
       }
@@ -45,15 +30,9 @@
       background-color: #FAF8F5;
       -webkit-tap-highlight-color: transparent;
     }
-    .card-shadow {
-      box-shadow: 0 8px 24px -4px rgba(139, 115, 85, 0.08), 0 4px 8px -2px rgba(139, 115, 85, 0.04);
-    }
-    .card-shadow:hover {
-      box-shadow: 0 14px 30px -4px rgba(139, 115, 85, 0.15), 0 6px 12px -2px rgba(139, 115, 85, 0.08);
-    }
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
-      width: 8px;
+      width: 6px;
     }
     ::-webkit-scrollbar-track {
       background: #FAF8F5;
@@ -67,177 +46,169 @@
 <body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
   <!-- Header -->
-  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-amber-100 shadow-sm">
-    <div class="max-w-5xl mx-auto px-4 py-3 sm:py-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <!-- Title & Badge -->
-        <div class="flex items-center space-x-3">
-          <div class="w-11 h-11 rounded-2xl bg-amber-400 text-white flex items-center justify-center text-2xl shadow-md transform -rotate-3 hover:rotate-0 transition-transform">
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-amber-100 shadow-sm">
+    <div class="max-w-2xl mx-auto px-4 py-3">
+      
+      <!-- Top Title & Progress Summary -->
+      <div class="flex items-center justify-between gap-3 mb-2.5">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-amber-400 text-white flex items-center justify-center text-lg font-bold shadow-sm">
             🐨
           </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h1 class="text-xl sm:text-2xl font-bold font-gowun text-slate-800">베베 동화 영상 모음</h1>
-              <span class="text-xs bg-amber-100 text-amber-800 font-semibold px-2.5 py-0.5 rounded-full">전 42권</span>
-            </div>
-            <p class="text-xs text-slate-500 mt-0.5">원하는 동화를 터치하면 바로 영상이 재생돼요!</p>
-          </div>
+          <h1 class="text-lg font-bold font-gowun text-slate-800">베베 동화 리스트</h1>
+          <span class="text-xs bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full">전 42권</span>
         </div>
 
-        <!-- Random Pick Button -->
-        <button id="random-btn" onclick="playRandomVideo()" class="self-start sm:self-center bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2 shadow-sm active:scale-95">
-          <i class="fa-solid fa-dice text-base"></i>
-          <span>오늘의 동화 뽑기</span>
-        </button>
+        <div class="text-right">
+          <div class="text-xs text-slate-500 font-medium">달성률 <span id="progress-percent" class="font-bold text-emerald-600">0%</span></div>
+          <div class="text-xs font-bold text-slate-700" id="progress-text">0 / 42 권</div>
+        </div>
+      </div>
+
+      <!-- Mini Progress Bar -->
+      <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-3">
+        <div id="progress-bar" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
       </div>
 
       <!-- Search & Filters -->
-      <div class="mt-4 flex flex-col sm:flex-row gap-2.5">
+      <div class="flex flex-col sm:flex-row gap-2">
         <!-- Search input -->
         <div class="relative flex-1">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-          <input type="text" id="search-input" placeholder="책 번호(예: 05, 12)나 제목 검색..." 
-            class="w-full pl-10 pr-9 py-2.5 bg-slate-100/80 hover:bg-slate-100 focus:bg-white text-sm rounded-xl border border-transparent focus:border-amber-400 focus:outline-none transition"
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text" id="search-input" placeholder="번호(01, 12) 또는 제목 검색..." 
+            class="w-full pl-8 pr-8 py-1.5 bg-slate-100/80 focus:bg-white text-xs sm:text-sm rounded-xl border border-transparent focus:border-amber-400 focus:outline-none transition"
             oninput="handleSearch()">
-          <button id="clear-search" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+          <button id="clear-search" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
             <i class="fa-solid fa-circle-xmark"></i>
           </button>
         </div>
 
         <!-- Filter Tabs -->
-        <div class="flex bg-slate-100/90 p-1 rounded-xl gap-1 text-xs sm:text-sm font-medium">
-          <button onclick="setFilter('all')" id="filter-all" class="filter-tab flex-1 sm:flex-none px-3 py-1.5 rounded-lg transition text-slate-600">
-            전체 <span id="count-all" class="ml-1 opacity-75">(42)</span>
+        <div class="flex bg-slate-100 p-0.5 rounded-xl text-xs font-medium border border-slate-200/60">
+          <button onclick="setFilter('all')" id="filter-all" class="filter-tab flex-1 sm:flex-none px-2.5 py-1 rounded-lg transition text-slate-600">
+            전체 <span id="count-all" class="text-[10px] opacity-75">(42)</span>
           </button>
-          <button onclick="setFilter('fav')" id="filter-fav" class="filter-tab flex-1 sm:flex-none px-3 py-1.5 rounded-lg transition text-slate-600">
-            <i class="fa-solid fa-heart text-rose-500 mr-1"></i>즐겨찾기 <span id="count-fav" class="ml-1 opacity-75">(0)</span>
+          <button onclick="setFilter('unwatched')" id="filter-unwatched" class="filter-tab flex-1 sm:flex-none px-2.5 py-1 rounded-lg transition text-slate-600">
+            미시청 <span id="count-unwatched" class="text-[10px] opacity-75">(0)</span>
           </button>
-          <button onclick="setFilter('watched')" id="filter-watched" class="filter-tab flex-1 sm:flex-none px-3 py-1.5 rounded-lg transition text-slate-600">
-            <i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i>시청완료 <span id="count-watched" class="ml-1 opacity-75">(0)</span>
+          <button onclick="setFilter('watched')" id="filter-watched" class="filter-tab flex-1 sm:flex-none px-2.5 py-1 rounded-lg transition text-slate-600">
+            시청완료 <span id="count-watched" class="text-[10px] opacity-75">(0)</span>
+          </button>
+          <button onclick="setFilter('fav')" id="filter-fav" class="filter-tab flex-1 sm:flex-none px-2.5 py-1 rounded-lg transition text-slate-600">
+            ★ 즐겨찾기 <span id="count-fav" class="text-[10px] opacity-75">(0)</span>
           </button>
         </div>
       </div>
+
     </div>
   </header>
 
   <!-- Main Container -->
-  <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full">
-    
-    <!-- Progress Bar Section -->
-    <section class="bg-white rounded-2xl p-4 mb-6 border border-amber-100/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="w-full sm:w-auto flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold">
-          <i class="fa-solid fa-trophy"></i>
-        </div>
-        <div>
-          <div class="text-xs text-slate-500 font-medium">우리 아이 동화 정독 달성률</div>
-          <div class="text-lg font-bold text-slate-800" id="progress-text">0 / 42 권 시청 완료 (0%)</div>
-        </div>
-      </div>
+  <main class="max-w-2xl mx-auto px-3 sm:px-4 py-4 flex-1 w-full">
 
-      <!-- Progress Track -->
-      <div class="w-full sm:w-64 bg-slate-100 h-3.5 rounded-full overflow-hidden p-0.5">
-        <div id="progress-bar" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-      </div>
-    </section>
+    <!-- Random Pick Button -->
+    <div class="mb-3 flex justify-between items-center">
+      <span class="text-xs font-semibold text-slate-500">목록을 터치하면 바로 영상이 열립니다</span>
+      <button onclick="playRandomVideo()" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 shadow-sm active:scale-95">
+        <i class="fa-solid fa-dice"></i>
+        <span>오늘의 동화 추천</span>
+      </button>
+    </div>
 
     <!-- Empty State -->
-    <div id="empty-state" class="hidden py-16 text-center">
-      <div class="text-5xl mb-3">🔍</div>
-      <h3 class="text-lg font-bold text-slate-700">검색 조건에 맞는 동화가 없어요</h3>
-      <p class="text-sm text-slate-500 mt-1">검색어를 바꿔보거나 필터를 '전체'로 변경해 보세요.</p>
-      <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-amber-100 text-amber-800 hover:bg-amber-200 text-sm font-semibold rounded-xl transition">
+    <div id="empty-state" class="hidden py-16 text-center bg-white rounded-2xl border border-slate-200">
+      <div class="text-4xl mb-2">🔍</div>
+      <h3 class="text-sm font-bold text-slate-700">검색 또는 필터 결과가 없습니다.</h3>
+      <p class="text-xs text-slate-400 mt-1">다른 검색어를 입력하거나 필터를 해제해 보세요.</p>
+      <button onclick="resetFilters()" class="mt-3 px-3 py-1.5 bg-amber-100 text-amber-800 text-xs font-semibold rounded-lg hover:bg-amber-200 transition">
         필터 초기화
       </button>
     </div>
 
-    <!-- Cards Grid -->
-    <div id="book-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-      <!-- Book items dynamically inserted here -->
+    <!-- Compact List Container -->
+    <div id="book-list" class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden divide-y divide-slate-100">
+      <!-- Dynamic Rows Rendered Here -->
     </div>
   </main>
 
   <!-- Footer -->
-  <footer class="bg-white border-t border-slate-100 mt-12 py-6 px-4 text-center text-xs text-slate-400">
-    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+  <footer class="bg-white border-t border-slate-100 mt-8 py-4 px-4 text-center text-xs text-slate-400">
+    <div class="max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
       <p>© 베베 코알라 동화 영상 라이브러리 · 영상 저작권은 그레이트북스에 있습니다.</p>
       <button onclick="confirmResetAll()" class="text-slate-400 hover:text-rose-500 transition underline underline-offset-2">
-        <i class="fa-solid fa-rotate-left mr-1"></i>시청 기록 및 즐겨찾기 초기화
+        <i class="fa-solid fa-rotate-left mr-1"></i>기록 초기화
       </button>
     </div>
   </footer>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-800/90 text-white px-4 py-2.5 rounded-full text-xs sm:text-sm font-medium shadow-lg backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 transform translate-y-3 z-50 flex items-center gap-2">
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-800/90 text-white px-4 py-2 rounded-full text-xs font-medium shadow-lg backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 transform translate-y-3 z-50 flex items-center gap-1.5">
     <span id="toast-icon">✨</span>
     <span id="toast-message">알림</span>
   </div>
 
   <!-- JavaScript App Logic -->
   <script>
-    // Base URL format from user request
-    const BASE_URL = "https://www.greatbooks.co.kr/video/video.ashx?ts=dFxLTX8KB1XB6BjfiRBIpV4sL67DPFSbURgMqUuBgzO0S1Q9Uan749ZGJiz/m4ZN5ZaOttcVrwgMOOm8nCDuXhEUncVmc3r0MjdgKHUVY6A=&gc=139";
-    
-    function getVideoUrl(bn, title) {
-      return `${BASE_URL}&bn=${bn}&bookTitle=${encodeURIComponent(title).replace(/%20/g, '+')}`;
+    // Permanent URL pattern requirement
+    function getVideoUrl(bn) {
+      return `http://greatbooks.co.kr/qrauth.asp?gc=139&bn=${bn}`;
     }
 
-    // Book Dataset (42 Books + Matching Themes & Emojis + Pastel BG Accents)
+    // 42 Books Dataset
     const books = [
-      { bn: 1, title: "정원에서 놀아요", emoji: "🌻", bg: "bg-amber-50 hover:border-amber-300" },
-      { bn: 2, title: "베베의 새 자전거", emoji: "🚲", bg: "bg-sky-50 hover:border-sky-300" },
-      { bn: 3, title: "생일 축하해요", emoji: "🎂", bg: "bg-rose-50 hover:border-rose-300" },
-      { bn: 4, title: "동물 농장에 가요", emoji: "🐮", bg: "bg-emerald-50 hover:border-emerald-300" },
-      { bn: 5, title: "바다가 좋아요", emoji: "🌊", bg: "bg-blue-50 hover:border-blue-300" },
-      { bn: 6, title: "베베와 꼬마 음악대", emoji: "🥁", bg: "bg-purple-50 hover:border-purple-300" },
-      { bn: 7, title: "꼬꼬를 잃어버렸어요", emoji: "🐔", bg: "bg-amber-50 hover:border-amber-300" },
-      { bn: 8, title: "신나는 어린이집", emoji: "🎒", bg: "bg-teal-50 hover:border-teal-300" },
-      { bn: 9, title: "빙글빙글 회전목마", emoji: "🎠", bg: "bg-pink-50 hover:border-pink-300" },
-      { bn: 10, title: "변기에 쉬해요", emoji: "🚽", bg: "bg-blue-50 hover:border-blue-300" },
-      { bn: 11, title: "서커스를 보러 가요", emoji: "🎪", bg: "bg-red-50 hover:border-red-300" },
-      { bn: 12, title: "베베의 식사 시간", emoji: "🥣", bg: "bg-amber-50 hover:border-amber-300" },
-      { bn: 13, title: "베베와 아기 고양이", emoji: "🐱", bg: "bg-orange-50 hover:border-orange-300" },
-      { bn: 14, title: "즐거운 크리스마스", emoji: "🎄", bg: "bg-emerald-50 hover:border-emerald-300" },
-      { bn: 15, title: "동물원에 가요", emoji: "🐘", bg: "bg-lime-50 hover:border-lime-300" },
-      { bn: 16, title: "베베의 목욕 시간", emoji: "🛁", bg: "bg-cyan-50 hover:border-cyan-300" },
-      { bn: 17, title: "변장 놀이를 해요", emoji: "🎭", bg: "bg-indigo-50 hover:border-indigo-300" },
-      { bn: 18, title: "깜깜한 건 무서워요", emoji: "🌙", bg: "bg-slate-100 hover:border-slate-300" },
-      { bn: 19, title: "씽씽 스키를 타요", emoji: "🎿", bg: "bg-sky-50 hover:border-sky-300" },
-      { bn: 20, title: "식당에 갔어요", emoji: "🍽️", bg: "bg-orange-50 hover:border-orange-300" },
-      { bn: 21, title: "동생이 생겼어요", emoji: "👶", bg: "bg-rose-50 hover:border-rose-300" },
-      { bn: 22, title: "화내지 말아요", emoji: "💖", bg: "bg-pink-50 hover:border-pink-300" },
-      { bn: 23, title: "친구가 놀러 왔어요", emoji: "👫", bg: "bg-violet-50 hover:border-violet-300" },
-      { bn: 24, title: "쪽쪽이는 필요 없어요", emoji: "🍼", bg: "bg-amber-50 hover:border-amber-300" },
-      { bn: 25, title: "병원에 간 베베", emoji: "🏥", bg: "bg-red-50 hover:border-red-300" },
-      { bn: 26, title: "할머니 댁에 갔어요", emoji: "👵", bg: "bg-amber-50 hover:border-amber-300" },
-      { bn: 27, title: "사이좋게 놀아요", emoji: "🤝", bg: "bg-emerald-50 hover:border-emerald-300" },
-      { bn: 28, title: "베베가 아파요", emoji: "🤒", bg: "bg-rose-50 hover:border-rose-300" },
-      { bn: 29, title: "베베는 싫다고만 해요", emoji: "🙅", bg: "bg-slate-100 hover:border-slate-300" },
-      { bn: 30, title: "수영장에서 놀아요", emoji: "🏊", bg: "bg-blue-50 hover:border-blue-300" },
-      { bn: 31, title: "베베는 요리사", emoji: "🧑‍🍳", bg: "bg-yellow-50 hover:border-yellow-300" },
-      { bn: 32, title: "조랑말을 타요", emoji: "🐴", bg: "bg-amber-50 hover:border-amber-300" },
-      { bn: 33, title: "혼자 옷을 입어요", emoji: "👕", bg: "bg-indigo-50 hover:border-indigo-300" },
-      { bn: 34, title: "엄마 사랑해요", emoji: "❤️", bg: "bg-rose-50 hover:border-rose-300" },
-      { bn: 35, title: "마트에 갔어요", emoji: "🛒", bg: "bg-teal-50 hover:border-teal-300" },
-      { bn: 36, title: "놀이터는 재미있어요", emoji: "🛝", bg: "bg-green-50 hover:border-green-300" },
-      { bn: 37, title: "처음 유치원에 간 날", emoji: "🏫", bg: "bg-yellow-50 hover:border-yellow-300" },
-      { bn: 38, title: "맛있는 급식 시간", emoji: "🍱", bg: "bg-amber-50 hover:border-amber-300" },
-      { bn: 39, title: "베베는 자기 싫어요", emoji: "🛌", bg: "bg-indigo-50 hover:border-indigo-300" },
-      { bn: 40, title: "아빠 사랑해요", emoji: "💙", bg: "bg-sky-50 hover:border-sky-300" },
-      { bn: 41, title: "이가 빠졌어요", emoji: "🦷", bg: "bg-slate-100 hover:border-slate-300" },
-      { bn: 42, title: "베베는 축구 선수", emoji: "⚽", bg: "bg-emerald-50 hover:border-emerald-300" }
+      { bn: 1, title: "정원에서 놀아요" },
+      { bn: 2, title: "베베의 새 자전거" },
+      { bn: 3, title: "생일 축하해요" },
+      { bn: 4, title: "동물 농장에 가요" },
+      { bn: 5, title: "바다가 좋아요" },
+      { bn: 6, title: "베베와 꼬마 음악대" },
+      { bn: 7, title: "꼬꼬를 잃어버렸어요" },
+      { bn: 8, title: "신나는 어린이집" },
+      { bn: 9, title: "빙글빙글 회전목마" },
+      { bn: 10, title: "변기에 쉬해요" },
+      { bn: 11, title: "서커스를 보러 가요" },
+      { bn: 12, title: "베베의 식사 시간" },
+      { bn: 13, title: "베베와 아기 고양이" },
+      { bn: 14, title: "즐거운 크리스마스" },
+      { bn: 15, title: "동물원에 가요" },
+      { bn: 16, title: "베베의 목욕 시간" },
+      { bn: 17, title: "변장 놀이를 해요" },
+      { bn: 18, title: "깜깜한 건 무서워요" },
+      { bn: 19, title: "씽씽 스키를 타요" },
+      { bn: 20, title: "식당에 갔어요" },
+      { bn: 21, title: "동생이 생겼어요" },
+      { bn: 22, title: "화내지 말아요" },
+      { bn: 23, title: "친구가 놀러 왔어요" },
+      { bn: 24, title: "쪽쪽이는 필요 없어요" },
+      { bn: 25, title: "병원에 간 베베" },
+      { bn: 26, title: "할머니 댁에 갔어요" },
+      { bn: 27, title: "사이좋게 놀아요" },
+      { bn: 28, title: "베베가 아파요" },
+      { bn: 29, title: "베베는 싫다고만 해요" },
+      { bn: 30, title: "수영장에서 놀아요" },
+      { bn: 31, title: "베베는 요리사" },
+      { bn: 32, title: "조랑말을 타요" },
+      { bn: 33, title: "혼자 옷을 입어요" },
+      { bn: 34, title: "엄마 사랑해요" },
+      { bn: 35, title: "마트에 갔어요" },
+      { bn: 36, title: "놀이터는 재미있어요" },
+      { bn: 37, title: "처음 유치원에 간 날" },
+      { bn: 38, title: "맛있는 급식 시간" },
+      { bn: 39, title: "베베는 자기 싫어요" },
+      { bn: 40, title: "아빠 사랑해요" },
+      { bn: 41, title: "이가 빠졌어요" },
+      { bn: 42, title: "베베는 축구 선수" }
     ];
 
-    // App State from localStorage
+    // Local Storage State Management
     let userState = {
       favs: JSON.parse(localStorage.getItem('bebe_favs') || '[]'),
       watched: JSON.parse(localStorage.getItem('bebe_watched') || '[]')
     };
 
-    let currentFilter = 'all'; // 'all', 'fav', 'watched'
+    let currentFilter = 'all'; // 'all', 'unwatched', 'watched', 'fav'
     let searchQuery = '';
 
-    // Initialize UI
     document.addEventListener('DOMContentLoaded', () => {
       renderApp();
     });
@@ -250,9 +221,11 @@
     }
 
     function updateCounts() {
+      const unwatchedCount = books.length - userState.watched.length;
       document.getElementById('count-all').innerText = `(${books.length})`;
-      document.getElementById('count-fav').innerText = `(${userState.favs.length})`;
+      document.getElementById('count-unwatched').innerText = `(${unwatchedCount})`;
       document.getElementById('count-watched').innerText = `(${userState.watched.length})`;
+      document.getElementById('count-fav').innerText = `(${userState.favs.length})`;
     }
 
     function updateProgress() {
@@ -260,14 +233,14 @@
       const total = books.length;
       const percent = Math.round((watchedCount / total) * 100);
       
-      document.getElementById('progress-text').innerText = `${watchedCount} / ${total} 권 시청 완료 (${percent}%)`;
+      document.getElementById('progress-text').innerText = `${watchedCount} / ${total} 권`;
+      document.getElementById('progress-percent').innerText = `${percent}%`;
       document.getElementById('progress-bar').style.width = `${percent}%`;
     }
 
     function setFilter(filterType) {
       currentFilter = filterType;
       
-      // Update Tab CSS
       document.querySelectorAll('.filter-tab').forEach(tab => {
         tab.classList.remove('bg-white', 'text-amber-800', 'shadow-sm', 'font-bold');
         tab.classList.add('text-slate-600');
@@ -279,7 +252,7 @@
         activeTab.classList.remove('text-slate-600');
       }
 
-      renderGrid();
+      renderList();
     }
 
     function handleSearch() {
@@ -293,7 +266,7 @@
         clearBtn.classList.add('hidden');
       }
 
-      renderGrid();
+      renderList();
     }
 
     function clearSearch() {
@@ -301,7 +274,7 @@
       input.value = '';
       searchQuery = '';
       document.getElementById('clear-search').classList.add('hidden');
-      renderGrid();
+      renderList();
     }
 
     function resetFilters() {
@@ -310,21 +283,21 @@
     }
 
     function toggleFav(bn, event) {
-      event.stopPropagation();
+      event.stopPropagation(); // Prevent opening link
       const index = userState.favs.indexOf(bn);
       if (index > -1) {
         userState.favs.splice(index, 1);
-        showToast('💔 즐겨찾기에서 해제되었습니다.');
+        showToast('⭐ 즐겨찾기에서 해제되었습니다.');
       } else {
         userState.favs.push(bn);
-        showToast('❤️ 즐겨찾기에 추가되었습니다!');
+        showToast('★ 즐겨찾기에 추가되었습니다!');
       }
       saveState();
-      renderGrid();
+      renderList();
     }
 
     function toggleWatched(bn, event) {
-      event.stopPropagation();
+      event.stopPropagation(); // Prevent opening link
       const index = userState.watched.indexOf(bn);
       if (index > -1) {
         userState.watched.splice(index, 1);
@@ -334,22 +307,18 @@
         showToast('✅ 시청 완료로 표시되었습니다!');
       }
       saveState();
-      renderGrid();
+      renderList();
     }
 
     function playVideo(book) {
-      // Mark as watched automatically upon playing
       if (!userState.watched.includes(book.bn)) {
         userState.watched.push(book.bn);
         saveState();
       }
 
-      const url = getVideoUrl(book.bn, book.title);
-      showToast(`🎬 '${book.title}' 영상으로 이동합니다...`);
-
-      // Open URL in new tab
+      const url = getVideoUrl(book.bn);
       window.open(url, '_blank', 'noopener,noreferrer');
-      renderGrid();
+      renderList();
     }
 
     function playRandomVideo() {
@@ -357,21 +326,19 @@
       showToast(`🎲 오늘의 추천: [${String(randomBook.bn).padStart(2, '0')}번] ${randomBook.title}!`);
       setTimeout(() => {
         playVideo(randomBook);
-      }, 500);
+      }, 400);
     }
 
-    function renderGrid() {
-      const grid = document.getElementById('book-grid');
+    function renderList() {
+      const listContainer = document.getElementById('book-list');
       const emptyState = document.getElementById('empty-state');
-      grid.innerHTML = '';
+      listContainer.innerHTML = '';
 
-      // Filter logic
       const filtered = books.filter(book => {
-        // Filter tabs
         if (currentFilter === 'fav' && !userState.favs.includes(book.bn)) return false;
         if (currentFilter === 'watched' && !userState.watched.includes(book.bn)) return false;
+        if (currentFilter === 'unwatched' && userState.watched.includes(book.bn)) return false;
 
-        // Search query (number match or title match)
         if (searchQuery) {
           const numStr = String(book.bn).padStart(2, '0');
           const numRaw = String(book.bn);
@@ -385,8 +352,10 @@
 
       if (filtered.length === 0) {
         emptyState.classList.remove('hidden');
+        listContainer.classList.add('hidden');
       } else {
         emptyState.classList.add('hidden');
+        listContainer.classList.remove('hidden');
       }
 
       filtered.forEach(book => {
@@ -394,49 +363,46 @@
         const isWatched = userState.watched.includes(book.bn);
         const formattedBn = String(book.bn).padStart(2, '0');
 
-        const card = document.createElement('div');
-        card.className = `group relative rounded-2xl border border-slate-200/80 p-3 sm:p-4 flex flex-col justify-between cursor-pointer transition-all duration-200 card-shadow hover:-translate-y-1 ${book.bg} ${isWatched ? 'opacity-85 bg-slate-50/70 border-slate-200' : ''}`;
+        const row = document.createElement('div');
+        row.className = `flex items-center justify-between px-3 sm:px-4 py-2.5 hover:bg-amber-50/60 active:bg-amber-100/50 cursor-pointer transition ${isWatched ? 'bg-slate-50/70' : 'bg-white'}`;
         
-        card.onclick = () => playVideo(book);
+        row.onclick = () => playVideo(book);
 
-        card.innerHTML = `
-          <!-- Top Row: Badge & Action Buttons -->
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold px-2 py-0.5 rounded-full ${isWatched ? 'bg-slate-200 text-slate-600' : 'bg-amber-400 text-white'}">
+        row.innerHTML = `
+          <!-- Left: Badge & Title -->
+          <div class="flex items-center gap-3 min-w-0 flex-1 mr-2">
+            <!-- Number Badge -->
+            <span class="inline-flex items-center justify-center w-7 h-7 text-xs font-bold rounded-lg shrink-0 ${isWatched ? 'bg-slate-200 text-slate-500' : 'bg-amber-100 text-amber-800'}">
               ${formattedBn}
             </span>
-            <div class="flex items-center gap-1.5">
-              <!-- Watched Button -->
-              <button onclick="toggleWatched(${book.bn}, event)" title="${isWatched ? '시청 해제' : '시청 완료 표시'}" 
-                class="w-7 h-7 rounded-full flex items-center justify-center text-xs transition ${isWatched ? 'bg-emerald-500 text-white' : 'bg-white/80 text-slate-300 hover:text-emerald-500 hover:bg-white'}">
-                <i class="fa-solid fa-check"></i>
-              </button>
-              <!-- Favorite Button -->
-              <button onclick="toggleFav(${book.bn}, event)" title="${isFav ? '즐겨찾기 해제' : '즐겨찾기 추가'}"
-                class="w-7 h-7 rounded-full flex items-center justify-center text-xs transition ${isFav ? 'bg-rose-500 text-white' : 'bg-white/80 text-slate-300 hover:text-rose-500 hover:bg-white'}">
-                <i class="fa-solid fa-heart"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Emoji Illustration -->
-          <div class="my-2 py-2 text-center text-4xl sm:text-5xl transform group-hover:scale-110 transition-transform">
-            ${book.emoji}
-          </div>
-
-          <!-- Title & Play Prompt -->
-          <div class="mt-2 text-center">
-            <h3 class="font-bold text-sm sm:text-base text-slate-800 line-clamp-1 group-hover:text-amber-700 transition">
+            <!-- Title -->
+            <span class="text-xs sm:text-sm font-semibold truncate ${isWatched ? 'text-slate-400 line-through decoration-slate-300' : 'text-slate-800'}">
               ${book.title}
-            </h3>
-            <div class="mt-2 text-xs font-semibold text-amber-600 flex items-center justify-center gap-1 opacity-90 group-hover:opacity-100">
+            </span>
+          </div>
+
+          <!-- Right: Compact Icon Buttons -->
+          <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+            <!-- Favorite Star Button -->
+            <button onclick="toggleFav(${book.bn}, event)" title="${isFav ? '즐겨찾기 해제' : '즐겨찾기 추가'}"
+              class="w-8 h-8 rounded-lg flex items-center justify-center text-xs transition ${isFav ? 'text-amber-500 bg-amber-50 hover:bg-amber-100' : 'text-slate-300 hover:text-amber-400 hover:bg-slate-100'}">
+              <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-star text-sm"></i>
+            </button>
+
+            <!-- Watched Toggle Button -->
+            <button onclick="toggleWatched(${book.bn}, event)" title="${isWatched ? '시청 해제' : '시청 완료 표시'}"
+              class="w-8 h-8 rounded-lg flex items-center justify-center text-xs transition ${isWatched ? 'text-emerald-600 bg-emerald-50 hover:bg-emerald-100' : 'text-slate-300 hover:text-emerald-500 hover:bg-slate-100'}">
+              <i class="fa-solid fa-circle-check text-sm"></i>
+            </button>
+
+            <!-- Play Video Action Arrow Icon -->
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs text-amber-600 bg-amber-50/80 group-hover:bg-amber-500 group-hover:text-white transition">
               <i class="fa-solid fa-circle-play text-sm"></i>
-              <span>영상 보기</span>
             </div>
           </div>
         `;
 
-        grid.appendChild(card);
+        listContainer.appendChild(row);
       });
     }
 
@@ -457,15 +423,15 @@
       setTimeout(() => {
         toast.classList.remove('opacity-100', 'translate-y-0');
         toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-3');
-      }, 2500);
+      }, 2000);
     }
 
     function confirmResetAll() {
-      if (confirm('시청 기록과 즐겨찾기가 모두 초기화됩니다. 계속할까요?')) {
+      if (confirm('시청 기록과 즐겨찾기가 모두 초기화됩니다. 계속하시겠습니까?')) {
         userState = { favs: [], watched: [] };
         saveState();
-        renderGrid();
-        showToast('🧹 시청 기록이 초기화되었습니다.');
+        renderList();
+        showToast('🧹 기록이 초기화되었습니다.');
       }
     }
   </script>
